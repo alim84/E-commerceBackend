@@ -5,15 +5,20 @@ let userSchema = new Schema(
     name: {
       type: String,
       require: true,
+      trim:true,
+      minLength:4,
+      maxLength:20
     },
     email: {
       type: String,
-      require: true,
-      unique: [true, "Already used email address"],
+      require: [true, "Name is required"],
+      unique: true,
+      trim:true
     },
     password: {
       type: String,
       require: true,
+      trim:true
     },
     otp: {
       type: Number,
@@ -27,10 +32,15 @@ let userSchema = new Schema(
     image: {
       type: String,
     },
+    role:{
+      type:String,
+      enum:["user", "admin", "superadmin"],
+      default:"user"
+    }
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("ecommerceuser", userSchema);
+module.exports = mongoose.model("User", userSchema);
