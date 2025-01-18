@@ -33,21 +33,52 @@ async function loginController(req, res) {
   let { email, password } = req.body;
   let existinguser = await userModel.findOne({ email });
   if (existinguser) {
-  
-    bcrypt.compare(password, existinguser.password, async function (err, result) {
-      if (result) {
-        let info = await userModel.findOne({ email }).select("-password");
-        const token = jwt.sign({ info }, process.env.jwt_secret, {
-          expiresIn: "1d",
-        });
-    
-        return res
-          .status(200)
-          .send({ sucess: "Login Success", data: existinguser, token });
-      } else {
-        return res.status(404).send({ error: "Invalid Password" });
+    bcrypt.compare(
+      password,
+      existinguser.password,
+      async function (err, result) {
+        if (result) {
+          if (existinguser.role == "user") {
+            let userInfo = {
+              id: existinguser._id,
+              name: existinguser.name,
+              email: existinguser.email,
+              role: existinguser.role,
+            };
+            const token = jwt.sign({ userInfo }, process.env.jwt_secret, {
+              expiresIn: "1d",
+            });
+            res.cookie("token", token, {
+              httpOnly: true,
+              secure: false,
+            });
+
+            return res
+              .status(200)
+              .send({ sucess: "User Login Success", data: userInfo, token });
+          } else if (existinguser.role == "admin") {
+            let userInfo = {
+              id: existinguser._id,
+              name: existinguser.name,
+              email: existinguser.email,
+              role: existinguser.role,
+            };
+            const token = jwt.sign({ userInfo }, process.env.jwt_secret, {
+              expiresIn: "1h",
+            });
+            res.cookie("token", token, {
+              httpOnly: true,
+              secure: false,
+            });
+            return res
+              .status(200)
+              .send({ sucess: "Admin Login Success", data: userInfo, token });
+          }
+        } else {
+          return res.status(404).send({ error: "Invalid Password" });
+        }
       }
-    });
+    );
   } else {
     return res.send({ error: "Credential Email" });
   }

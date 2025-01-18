@@ -5,20 +5,20 @@ let userSchema = new Schema(
     name: {
       type: String,
       require: true,
-      trim:true,
-      minLength:4,
-      maxLength:20
+      trim: true,
+      minLength: 4,
+      maxLength: 20,
     },
     email: {
       type: String,
       require: [true, "Name is required"],
       unique: true,
-      trim:true
+      trim: true,
     },
     password: {
       type: String,
       require: true,
-      trim:true
+      trim: true,
     },
     otp: {
       type: Number,
@@ -32,11 +32,14 @@ let userSchema = new Schema(
     image: {
       type: String,
     },
-    role:{
-      type:String,
-      enum:["user", "admin", "superadmin"],
-      default:"user"
-    }
+    isVerify: {
+      type: Boolean,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin", "superadmin"],
+      default: "user",
+    },
   },
   {
     timestamps: true,
