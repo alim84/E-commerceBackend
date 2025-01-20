@@ -1,3 +1,4 @@
+const sendEmail = require("../helpers/sendEmail");
 const EmailValidateCheck = require("../helpers/ValidateEmail");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
@@ -5,6 +6,9 @@ const jwt = require("jsonwebtoken");
 
 async function registrationController(req, res) {
   let { name, email, password } = req.body;
+
+  res.send(email);
+  return;
   if (!name || !email || !password) {
     return res.status(404).send({ msg: "All feild is required" });
   }
