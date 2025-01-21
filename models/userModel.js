@@ -34,6 +34,7 @@ let userSchema = new Schema(
     },
     isVerify: {
       type: Boolean,
+      default:false,
     },
     role: {
       type: String,

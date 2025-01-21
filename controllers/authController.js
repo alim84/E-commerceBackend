@@ -7,8 +7,6 @@ const jwt = require("jsonwebtoken");
 async function registrationController(req, res) {
   let { name, email, password } = req.body;
 
-  res.send(email);
-  return;
   if (!name || !email || !password) {
     return res.status(404).send({ msg: "All feild is required" });
   }
@@ -27,6 +25,19 @@ async function registrationController(req, res) {
         password: hash,
       });
       await user.save();
+      let otpsend = await userModel.findOneAndUpdate(
+        { email },
+        { $set: { otp: 1234 } },
+        { new: true }
+      );
+      setTimeout(async () => {
+        let otpsend = await userModel.findOneAndUpdate(
+          { email },
+          { $set: { otp: null } },
+          { new: true }
+        );
+      }, 5000);
+      sendEmail(email);
       res.send(user);
     });
   } catch (error) {
