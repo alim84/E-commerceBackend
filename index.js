@@ -5,6 +5,7 @@ const cors = require('cors')
 const dbConnect = require("./config/dbConfig");
 const cookieParser = require('cookie-parser')
 const app = express();
+app.use(express.static("uploads"));
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));

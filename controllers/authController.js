@@ -99,4 +99,13 @@ async function loginController(req, res) {
   }
 }
 
-module.exports = { registrationController, loginController };
+async function OtpVerifyController(req, res) {
+  const { email, otp } = req.body;
+  res.send(email);
+}
+
+module.exports = {
+  registrationController,
+  loginController,
+  OtpVerifyController,
+};

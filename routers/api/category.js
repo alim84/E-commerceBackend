@@ -12,10 +12,32 @@ const storage = multer.diskStorage({
 
     const extention = file.originalname.split(".");
 
-    cb(null, file.fieldname + "-" + uniqueSuffix + `.${extention[1]}`);
+    cb(
+      null,
+      file.fieldname +
+        "-" +
+        uniqueSuffix +
+        `.${extention[extention.length - 1]}`
+    );
   },
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
-router.post("/createcategory", upload.single("profile"), CreateCategory);
+function errCheck(err, req, res, next) {
+  if (err) {
+    return res.status(500).send({ success: false, msg: err.message });
+  }
+  next();
+}
+router.post(
+  "/createcategory",
+  upload.single("image"),
+  errCheck,
+  CreateCategory
+);
 module.exports = router;
