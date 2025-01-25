@@ -101,7 +101,18 @@ async function loginController(req, res) {
 
 async function OtpVerifyController(req, res) {
   const { email, otp } = req.body;
-  res.send(email);
+  const existinguser = await userModel.findOne({ email });
+  if (existinguser) {
+    if (existinguser.otp == otp) {
+      existinguser.isVerify = true;
+      await existinguser.save();
+      return res.status(200).send({ success: true, msg: "OTP Verify" });
+    } else {
+      return res.status(404).send({ success: false, msg: "Invalid OTP" });
+    }
+  } else {
+    return res.status(404).send({ success: false, msg: "User nnot found" });
+  }
 }
 
 module.exports = {
