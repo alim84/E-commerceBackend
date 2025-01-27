@@ -3,6 +3,7 @@ const EmailValidateCheck = require("../helpers/ValidateEmail");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const otp =require('otp-generator-simple')
 
 async function registrationController(req, res) {
   let { name, email, password } = req.body;
@@ -114,9 +115,30 @@ async function OtpVerifyController(req, res) {
     return res.status(404).send({ success: false, msg: "User nnot found" });
   }
 }
+async function ResendOtpController(req, res) {
+  const{email}=req.body;
+  const existinguser =await userModel.findOne({email})
+  
+ if(existinguser){
+  let resend_otp=otp();
+existinguser.otp=resend_otp;
+await existinguser.save();
 
+setTimeout(async () => {
+ existinguser.otp=null;
+ await existinguser.save();
+}, 10000);
+
+sendEmail(email, resend_otp);
+
+return res.status(200).send({success:true, msg:"OTP resned"})
+ }else{
+  return res.status(404).send({success:false, msg:"user not found"})
+ }
+}
 module.exports = {
   registrationController,
   loginController,
   OtpVerifyController,
+  ResendOtpController
 };
