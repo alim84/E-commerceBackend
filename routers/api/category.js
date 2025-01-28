@@ -1,5 +1,5 @@
 const express = require("express");
-const { CreateCategory } = require("../../controllers/categoryController");
+const { CreateCategory, deleteCategory } = require("../../controllers/categoryController");
 const multer = require("multer");
 
 const router = express.Router();
@@ -40,4 +40,5 @@ router.post(
   errCheck,
   CreateCategory
 );
+router.delete("deletecategory/:id", deleteCategory);
 module.exports = router;
