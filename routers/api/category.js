@@ -40,5 +40,5 @@ router.post(
   errCheck,
   CreateCategory
 );
-router.delete("deletecategory/:id", deleteCategory);
+router.delete("/deletecategory/:id", deleteCategory);
 module.exports = router;
