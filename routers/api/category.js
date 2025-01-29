@@ -1,5 +1,10 @@
 const express = require("express");
-const { CreateCategory, deleteCategory } = require("../../controllers/categoryController");
+const {
+  CreateCategory,
+  deleteCategory,
+  allcategory,
+  updatecategory,
+} = require("../../controllers/categoryController");
 const multer = require("multer");
 
 const router = express.Router();
@@ -41,4 +46,6 @@ router.post(
   CreateCategory
 );
 router.delete("/deletecategory/:id", deleteCategory);
+router.get("/allcategory", allcategory);
+router.patch("/updatecategory", updatecategory);
 module.exports = router;
