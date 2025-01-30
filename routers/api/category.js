@@ -4,6 +4,7 @@ const {
   deleteCategory,
   allcategory,
   updatecategory,
+  singleCategory,
 } = require("../../controllers/categoryController");
 const multer = require("multer");
 
@@ -47,5 +48,6 @@ router.post(
 );
 router.delete("/deletecategory/:id", deleteCategory);
 router.get("/allcategory", allcategory);
-router.patch("/updatecategory", updatecategory);
+router.patch("/updatecategory/:id", upload.single("image"), updatecategory);
+router.get ("/singlecategory/:id", singleCategory)
 module.exports = router;

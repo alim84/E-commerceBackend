@@ -62,7 +62,57 @@ async function allcategory(req, res) {
 }
 
 async function updatecategory(req, res) {
-  res.send("update Category")
+  let {id}=req.params;
+  let {name, description}=req.body;
+  const image =req.file
+  const {filename}=image;
+
+
+  try {
+     let category = await categoryModel.findOneAndUpdate({ _id: id },{name, description, image: process.env.HOST_URL + req.file.filename});
+    let imagepath = category.image.split("/");
+    let oldimagepath = imagepath[imagepath.length - 1];
+    fs.unlink(
+      `${path.join(__dirname, "../uploads")}/${oldimagepath}`,
+      (err) => {
+        if (err) {
+          res.status(500).send({
+            success: false,
+            msg: `${err.message ? err.message : "Internal Server error"}`,
+            err,
+          });
+        } else {
+          res
+            .status(200)
+            .send({ success: true, msg: "image Deleted", data: category });
+        }
+      }
+    );
+
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal Server error"}`,
+      error,
+    });
+  }
+
+
 }
 
-module.exports = { CreateCategory, deleteCategory, allcategory, updatecategory };
+async function singleCategory(req, res) {
+  let {id}=req.params
+  try {
+    let singlecategory = await categoryModel.findOne({ _id: id });
+    res.status(200).send({success:true, msg:"single Category Find", data:singlecategory})
+
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal Server error"}`,
+      error,
+    });
+  }
+}
+
+module.exports = { CreateCategory, deleteCategory, allcategory, updatecategory, singleCategory };
