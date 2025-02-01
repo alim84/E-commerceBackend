@@ -1,8 +1,9 @@
 const express= require("express");
-const { addproductController } = require("../../controllers/productController");
+const { addproductController, deleteProductController, allProductController } = require("../../controllers/productController");
 const router =express.Router();
 const multer = require("multer");
-const path= require("path")
+const path= require("path");
+const { authMiddleware } = require("../../middleware/authMiddleware");
 
 
 const storage = multer.diskStorage({
@@ -37,6 +38,8 @@ function errCheck(err, req, res, next) {
   next();
 }
 
-router.post("/addproduct", errCheck, upload.array("image"), addproductController)
+router.post("/addproduct", authMiddleware, errCheck, upload.array("image"), addproductController)
+router.delete("/deleteproduct/:id", authMiddleware,  deleteProductController)
+router.get("/allproduct", allProductController)
 
 module.exports=router

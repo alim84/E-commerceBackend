@@ -10,14 +10,16 @@ function authMiddleware(req, res, next) {
         let { role } = decoded.userInfo;
         if (role == "admin") {
           next();
+        } else {
+          return res
+            .status(401)
+            .send({ success: false, msg: "accesss denied" });
         }
       }
     });
   } else {
     return res.status(404).send({ success: false, message: "Token Not Found" });
   }
-
-
 }
 
 module.exports = { authMiddleware };
