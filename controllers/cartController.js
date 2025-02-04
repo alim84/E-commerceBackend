@@ -10,9 +10,11 @@ async function cartController(req, res) {
       user,
     });
     await cart.save();
-    return res
-      .status(201)
-      .send({ success: true, msg: "Product add successfully", data: cart });
+    return res.status(201).send({
+      success: true,
+      msg: "Product add to Cart successfully",
+      data: cart,
+    });
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -21,4 +23,22 @@ async function cartController(req, res) {
     });
   }
 }
-module.exports = { cartController };
+async function getSingleUsercartController(req, res) {
+  let { id } = req.params;
+  try {
+    let cart = await cartModel.find({ user: id });
+
+    res.status(201).send({
+      success: true,
+      msg: "Product add featch successfully",
+      data: cart,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal Server error"}`,
+      error,
+    });
+  }
+}
+module.exports = { cartController, getSingleUsercartController };

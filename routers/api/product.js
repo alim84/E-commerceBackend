@@ -38,8 +38,8 @@ function errCheck(err, req, res, next) {
   next();
 }
 
-router.post("/addproduct", authMiddleware, errCheck, upload.array("image"), addproductController)
-router.delete("/deleteproduct/:id", authMiddleware,  deleteProductController)
+router.post("/addproduct",  errCheck, upload.array("image"), addproductController)
+router.delete("/deleteproduct/:id",   deleteProductController)
 router.get("/allproduct", allProductController)
 
 module.exports=router

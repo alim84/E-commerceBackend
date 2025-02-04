@@ -48,8 +48,8 @@ router.post(
   errCheck,
   CreateCategory
 );
-router.delete("/deletecategory/:id", authMiddleware, deleteCategory);
+router.delete("/deletecategory/:id",  deleteCategory);
 router.get("/allcategory",  allcategory);
-router.patch("/updatecategory/:id", authMiddleware, upload.single("image"), updatecategory);
+router.patch("/updatecategory/:id", upload.single("image"), updatecategory);
 router.get ("/singlecategory/:id", singleCategory)
 module.exports = router;

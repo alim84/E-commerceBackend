@@ -7,22 +7,18 @@ let cartSchema = new Schema(
       ref: "Userbd",
     },
 
-     products: 
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    
+    products: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+
     quntity: {
       type: Number,
-      require: true,
-      default:1,
+      default: 1,
     },
-price:{
-  type:Number,
-
-}
-
+    price: {
+      type: Number,
+    },
   },
   {
     timestamps: true,
