@@ -3,7 +3,7 @@ const EmailValidateCheck = require("../helpers/ValidateEmail");
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const otp =require('otp-generator-simple')
+const otp = require("otp-generator-simple");
 
 async function registrationController(req, res) {
   let { name, email, password } = req.body;
@@ -62,10 +62,10 @@ async function loginController(req, res) {
               role: existinguser.role,
             };
             const token = jwt.sign({ userInfo }, process.env.jwt_secret, {
-              expiresIn: "1d",
+              expiresIn: "30d",
             });
             res.cookie("token", token, {
-              httpOnly: true,
+              // httpOnly: true,
               secure: false,
             });
 
@@ -80,10 +80,10 @@ async function loginController(req, res) {
               role: existinguser.role,
             };
             const token = jwt.sign({ userInfo }, process.env.jwt_secret, {
-              expiresIn: "1h",
+              expiresIn: "30d",
             });
             res.cookie("token", token, {
-              httpOnly: true,
+              // httpOnly: true,
               secure: false,
             });
             return res
@@ -116,29 +116,29 @@ async function OtpVerifyController(req, res) {
   }
 }
 async function ResendOtpController(req, res) {
-  const{email}=req.body;
-  const existinguser =await userModel.findOne({email})
-  
- if(existinguser){
-  let resend_otp=otp();
-existinguser.otp=resend_otp;
-await existinguser.save();
+  const { email } = req.body;
+  const existinguser = await userModel.findOne({ email });
 
-setTimeout(async () => {
- existinguser.otp=null;
- await existinguser.save();
-}, 10000);
+  if (existinguser) {
+    let resend_otp = otp();
+    existinguser.otp = resend_otp;
+    await existinguser.save();
 
-sendEmail(email, resend_otp);
+    setTimeout(async () => {
+      existinguser.otp = null;
+      await existinguser.save();
+    }, 10000);
 
-return res.status(200).send({success:true, msg:"OTP resned"})
- }else{
-  return res.status(404).send({success:false, msg:"user not found"})
- }
+    sendEmail(email, resend_otp);
+
+    return res.status(200).send({ success: true, msg: "OTP resned" });
+  } else {
+    return res.status(404).send({ success: false, msg: "user not found" });
+  }
 }
 module.exports = {
   registrationController,
   loginController,
   OtpVerifyController,
-  ResendOtpController
+  ResendOtpController,
 };

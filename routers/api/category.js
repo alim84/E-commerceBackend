@@ -43,7 +43,7 @@ function errCheck(err, req, res, next) {
 }
 router.post(
   "/createcategory",
-  // authMiddleware,
+  authMiddleware,
   upload.single("image"),
   errCheck,
   CreateCategory
