@@ -2,13 +2,12 @@ const categoryModel = require("../models/categoryModel");
 const fs = require("fs");
 const path = require("path");
 
-
 async function CreateCategory(req, res) {
   let { name, description } = req.body;
   let category = new categoryModel({
     name,
     description,
-    image: process.env.HOST_URL + req.file.filename, 
+    image: process.env.HOST_URL + req.file.filename,
   });
   await category.save();
   return res.status(201).send({ success: true, msg: "category is created" });
@@ -49,8 +48,8 @@ async function allcategory(req, res) {
   try {
     let allcategory = await categoryModel.find({});
     res
-    .status(200)
-    .send({ success: true, msg: "show all Category", data: allcategory });
+      .status(200)
+      .send({ success: true, msg: "show all Category", data: allcategory });
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -58,18 +57,20 @@ async function allcategory(req, res) {
       error,
     });
   }
-  res.send("all category")
+  res.send("all category");
 }
 
 async function updatecategory(req, res) {
-  let {id}=req.params;
-  let {name, description}=req.body;
-  const image =req.file
-  const {filename}=image;
-
+  let { id } = req.params;
+  let { name, description } = req.body;
+  const image = req.file;
+  const { filename } = image;
 
   try {
-     let category = await categoryModel.findOneAndUpdate({ _id: id },{name, description, image: process.env.HOST_URL + req.file.filename});
+    let category = await categoryModel.findOneAndUpdate(
+      { _id: id },
+      { name, description, image: process.env.HOST_URL + req.file.filename }
+    );
     let imagepath = category.image.split("/");
     let oldimagepath = imagepath[imagepath.length - 1];
     fs.unlink(
@@ -88,7 +89,6 @@ async function updatecategory(req, res) {
         }
       }
     );
-
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -96,16 +96,19 @@ async function updatecategory(req, res) {
       error,
     });
   }
-
-
 }
 
 async function singleCategory(req, res) {
-  let {id}=req.params
+  let { id } = req.params;
   try {
     let singlecategory = await categoryModel.findOne({ _id: id });
-    res.status(200).send({success:true, msg:"single Category Find", data:singlecategory})
-
+    res
+      .status(200)
+      .send({
+        success: true,
+        msg: "single Category Find",
+        data: singlecategory,
+      });
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -115,4 +118,10 @@ async function singleCategory(req, res) {
   }
 }
 
-module.exports = { CreateCategory, deleteCategory, allcategory, updatecategory, singleCategory };
+module.exports = {
+  CreateCategory,
+  deleteCategory,
+  allcategory,
+  updatecategory,
+  singleCategory,
+};
