@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 async function addproductController(req, res) {
-  let { name, desctription, sellingprice, discountprice, categroy, stock } =
+  let { name, description, sellingprice, discountprice, category, stock } =
     req.body;
 
   let images = req.files.map(
@@ -13,10 +13,10 @@ async function addproductController(req, res) {
   try {
     const product = new productModel({
       name,
-      desctription,
+      description,
       sellingprice,
       discountprice,
-      categroy,
+      category,
       stock,
       image: images,
     });

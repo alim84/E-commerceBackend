@@ -16,7 +16,7 @@ let productSchema = new Schema(
       require: true,
     },
 
-    categroy: {
+    category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
