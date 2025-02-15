@@ -41,4 +41,60 @@ async function getSingleUsercartController(req, res) {
     });
   }
 }
-module.exports = { cartController, getSingleUsercartController };
+
+async function IncrementCartController(req, res) {
+  const { id } = req.params;
+  try {
+    const cart = await cartModel.findOne({ _id: id });
+    cart.quntity++;
+    await cart.save();
+    res.status(200).send({ msg: "Cart Successfull Upadate", data: cart });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal Server error"}`,
+      error,
+    });
+  }
+}
+async function decrementCartController(req, res) {
+  const { id } = req.params;
+  try {
+    const cart = await cartModel.findOne({ _id: id });
+    if (cart.quntity > 1) {
+      cart.quntity--;
+      await cart.save();
+      res.status(200).send({ msg: "Cart Successfull Upadate", data: cart });
+    } else {
+      res.status(404).send({ msg: "your cart quntity is must be one" });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal Server error"}`,
+      error,
+    });
+  }
+}
+async function DeleteCartController(req, res) {
+  const { id } = req.params;
+  try {
+    const deletecart = await cartModel.findOneAndDelete({ _id: id });
+    res
+      .status(200)
+      .send({ msg: "Cart Product deleted successfully", data: deletecart });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal Server error"}`,
+      error,
+    });
+  }
+}
+module.exports = {
+  cartController,
+  getSingleUsercartController,
+  IncrementCartController,
+  decrementCartController,
+  DeleteCartController,
+};
