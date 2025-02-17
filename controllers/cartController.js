@@ -10,7 +10,7 @@ async function cartController(req, res) {
       user,
     });
     await cart.save();
-    return res.status(201).send({
+    res.status(201).send({
       success: true,
       msg: "Product add to Cart successfully",
       data: cart,
@@ -45,10 +45,15 @@ async function getSingleUsercartController(req, res) {
 async function IncrementCartController(req, res) {
   const { id } = req.params;
   try {
-    const cart = await cartModel.findOne({ _id: id });
-    cart.quntity++;
-    await cart.save();
-    res.status(200).send({ msg: "Cart Successfull Upadate", data: cart });
+    const cart = await cartModel.findOne({ _id: id }).populate("products");
+
+    if (cart.products.stock > cart.quntity) {
+      cart.quntity++;
+      await cart.save();
+      res.status(200).send({ msg: "Cart Successfull Upadate", data: cart });
+    } else {
+      res.status(200).send({ msg: "Out of Stock" });
+    }
   } catch (error) {
     res.status(500).send({
       success: false,
